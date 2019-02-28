@@ -230,7 +230,6 @@ void simulate_step(int forest[MAX_SIZE][MAX_SIZE], int n, int wind_dir, int* bur
 		}
 	}
 	int rand_value = rand();
-	printf("random: %f", (float)lightning * RAND_MAX);
 	if (rand_value < lightning * RAND_MAX) {
 		int x = rand() % (n * n);
 		int rand_i = (x - x % n) / n;
@@ -299,6 +298,7 @@ int main(void) {
 
 	int step;
 	int burned_down = 0;
+	printf("\n");
 	for (step = 0; step <= t; step++) {
 		printf("Time step: %i: ", step);
 		int wind_dir = get_wind_by_step(wind, wis, step);
@@ -307,6 +307,7 @@ int main(void) {
 		if (step < t) {
 			simulate_step(forest, n, wind_dir, &burned_down, lightning);
 		}
+		printf("\n");
 	}
 
 	output_summary(init_tree_amount, burned_down);
