@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #define MAX_SIZE 1000
 
@@ -246,17 +247,24 @@ void simulate_step(int forest[MAX_SIZE][MAX_SIZE], int n, int wind_dir, int* bur
 }
 
 int main(void) {
-	int t, n; 
+	char ch;
+	int t = 0, n; 
 	int wis, wdi, li;
 	int forest[MAX_SIZE][MAX_SIZE];
 	int wind[MAX_SIZE][2];
 	double lightning;
 	int random_seed;
- 
-    printf("Enter t: ");
-    scanf("%d", &t);
 
-    if (t < 0 || t > 1000)
+	int can_continue = 1;
+
+	printf("Enter t: ");
+ 
+	while((ch = getchar()) != '\n') {
+		if (isdigit(ch)) t = t * 10 + ch - 48;
+		else can_continue = 0;
+	}
+
+    if (t < 0 || t > 1000 || can_continue == 0)
     {
         printf("Incorrect Input: t must be 0..1000\n"); 
         return EXIT_FAILURE;
@@ -265,7 +273,7 @@ int main(void) {
         scanf("%d", &n);
         if (n < 3 || n > 25)
         {
-            printf("Incorrect Input: t must be 3..25\n");
+            printf("Incorrect Input: n must be 3..25\n");
             return EXIT_FAILURE;
         }
     }
