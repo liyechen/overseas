@@ -3,8 +3,10 @@
 int main(void) {
   double line_length, init_direction, angle_increment;
   double init_color_r, init_color_g, init_color_b;
+
   char* start_str = (char *)malloc(sizeof(char));
   StrLinkList *head;
+  head = (StrLinkList *)malloc(sizeof(StrLinkList));
 
   read_base_inputs(&line_length, &init_direction, &angle_increment, &init_color_r, &init_color_g, &init_color_b);
 
