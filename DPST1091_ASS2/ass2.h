@@ -3,6 +3,11 @@
 #include <ctype.h>
 #include <math.h>
 
+typedef struct str_node {
+  char ch;
+  struct str_node *next;
+} StrLinkList;
+
 void error_input() {
   printf("Error input.\n");
   exit(1);
