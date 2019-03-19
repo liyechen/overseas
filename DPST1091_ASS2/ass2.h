@@ -3,6 +3,9 @@
 #include <ctype.h>
 #include <math.h>
 
+#define true 1
+#define false 0
+
 typedef struct str_node {
   char ch;
   struct str_node *next;
@@ -49,14 +52,34 @@ void output_base_inputs(double line_length, double init_direction, double angle_
   printf("Initial Colour: RGB(%.4f,%.4f,%.4f)\n", init_color_r, init_color_g, init_color_b);
 }
 
-void read_start_str(char* str) {
+void read_start_str(StrLinkList* node) {
+  char* str;
   if (!scanf("%s", str)) {
     error_input();
   }
+  char* temp = str;
+  node->ch = *temp;
+  temp++;
+  StrLinkList* head_node = node;
+  while (*temp) {
+    StrLinkList* temp_node = (StrLinkList*)malloc(sizeof(StrLinkList));
+    temp_node->ch = *temp;
+    temp_node->next = NULL;
+    head_node->next = temp_node;
+    head_node = temp_node;
+    temp++;
+  }
 }
 
-void output_start_str(char* str) {
-  printf("Start String: %s\n", str);
+void output_start_str(StrLinkList* node) {
+  StrLinkList* t = node;
+  printf("Start String: ");
+  while(t->next != NULL) {
+    printf("%c", t->ch);
+    t = t->next;
+  }
+  putchar(t->ch);
+  putchar('\n');
 }
 
 void read_rules() {
