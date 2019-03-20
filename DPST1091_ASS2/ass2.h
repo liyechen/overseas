@@ -2,20 +2,18 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
+#include "ass2types.h"
 
 #define true 1
 #define false 0
 
-typedef struct str_node {
-  char ch;
-  struct str_node *next;
-} StrLinkList;
-
+// exit the program while error input happens
 void error_input() {
   printf("Error input.\n");
   exit(1);
 }
 
+// read base configs
 void read_base_inputs(double* line_length, double* init_direction, double* angle_increment, double* init_color_r, double* init_color_g, double* init_color_b) {
 
   if (!scanf("%lf", line_length)) {
@@ -43,6 +41,7 @@ void read_base_inputs(double* line_length, double* init_direction, double* angle
   }
 }
 
+// output some base configs...
 void output_base_inputs(double line_length, double init_direction, double angle_increment, double init_color_r, double init_color_g, double init_color_b) {
 
   printf("Line Length: %.4f\n", line_length);
@@ -52,8 +51,9 @@ void output_base_inputs(double line_length, double init_direction, double angle_
   printf("Initial Colour: RGB(%.4f,%.4f,%.4f)\n", init_color_r, init_color_g, init_color_b);
 }
 
+// read start string
 void read_start_str(StrLinkList* node) {
-  char* str;
+  char* str = (char*)malloc(sizeof(char));
   if (!scanf("%s", str)) {
     error_input();
   }
@@ -71,6 +71,7 @@ void read_start_str(StrLinkList* node) {
   }
 }
 
+// output start string
 void output_start_str(StrLinkList* node) {
   StrLinkList* t = node;
   printf("Start String: ");
