@@ -11,9 +11,6 @@ int main(int argc, char *argv[]) {
   if (argc > 2) {
     flag = argv[2];
   }
-  
-
-
 
   double line_length, init_direction, angle_increment;
   double init_color_r, init_color_g, init_color_b;
@@ -35,7 +32,15 @@ int main(int argc, char *argv[]) {
 
   output_rules(rules);
 
-  free(str_head);
+  //logic codes for stage^1 here 
+
+
+
+
+
+
+  // free linked space and rules space
+  free_strs(str_head);
   free(rules);
 
   return 0;

@@ -120,8 +120,15 @@ void output_rules(RuleMap* rules) {
   }
 }
 
-
-
+void free_strs(StrLinkList* head) {
+  StrLinkList* t = head;
+  while (t->next != NULL) {
+    StrLinkList* temp = t->next;
+    free(t);
+    t = temp;
+  }
+  free(t);
+}
 
 
 
