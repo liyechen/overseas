@@ -1,6 +1,20 @@
 #include "ass2.h"
 
-int main(void) {
+int main(int argc, char *argv[]) {
+  int iters = 0;
+  char* flag = (char*)malloc(sizeof(char));
+
+  if (argc > 1) {
+    iters = atoi(argv[1]);
+  }
+
+  if (argc > 2) {
+    flag = argv[2];
+  }
+  
+
+
+
   double line_length, init_direction, angle_increment;
   double init_color_r, init_color_g, init_color_b;
 
