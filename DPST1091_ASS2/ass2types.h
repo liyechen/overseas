@@ -1,7 +1,7 @@
 // linked list struct for new string
 typedef struct str_node {
   char ch;
-  struct str_node *next;
+  struct str_node* next;
 } StrLinkList;
 
 // struct for rules

@@ -7,6 +7,8 @@
 #define true 1
 #define false 0
 
+#define MAX_RULES 20
+
 // exit the program while error input happens
 void error_input() {
   printf("Error input.\n");
@@ -65,10 +67,13 @@ void read_start_str(StrLinkList* node) {
     StrLinkList* temp_node = (StrLinkList*)malloc(sizeof(StrLinkList));
     temp_node->ch = *temp;
     temp_node->next = NULL;
+
     head_node->next = temp_node;
     head_node = temp_node;
+
     temp++;
   }
+  head_node->next = NULL;
 }
 
 // output start string
@@ -83,10 +88,36 @@ void output_start_str(StrLinkList* node) {
   putchar('\n');
 }
 
-void read_rules() {
+void read_rules(RuleMap* rules) {
+  int i;
+  for (i = 0; i < MAX_RULES; i++) {
+    char* chs = (char*)malloc(sizeof(char));
+    if (!scanf("%s" , chs)) {
+      error_input();
+    }
+    char* ruleStr = (char*)malloc(sizeof(char));
+    if (!scanf("%s", ruleStr)) {
+      error_input();
+    }
+    RuleMap* rule = (RuleMap*)malloc(sizeof(RuleMap));
+    rule->ch = chs[0];
+    rule->rule = ruleStr;
+    rules[i] = *rule;
+  }
 }
 
-void output_rules() {
+void output_rules(RuleMap* rules) {
+  printf("Rules:\n");
+  int i;
+  RuleMap* t = rules;
+  for (i = 0; i < MAX_RULES; i++) {
+    if (t->ch == '\0' || t->ch == '\n') {
+      break;
+    } else {
+      printf("\'%c\' -> \"%s\"\n", t->ch, t->rule);
+    }
+    t++;
+  }
 }
 
 
