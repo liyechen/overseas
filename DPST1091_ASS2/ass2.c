@@ -26,14 +26,17 @@ int main(int argc, char *argv[]) {
 
   read_rules(rules);
 
-  output_base_inputs(line_length, init_direction, angle_increment, init_color_r, init_color_g, init_color_b);
+  if (argc == 1) output_base_inputs(line_length, init_direction, angle_increment, init_color_r, init_color_g, init_color_b);
 
-  output_start_str(str_head);
+  if (argc == 1) output_start_str(str_head);
 
-  output_rules(rules);
+  if (argc == 1) output_rules(rules);
 
   //logic codes for stage^1 here 
+  if (argc > 1) {
+    draw_commands(str_head, line_length, init_direction, angle_increment, init_color_r, init_color_g, init_color_b);
 
+  }
 
 
 

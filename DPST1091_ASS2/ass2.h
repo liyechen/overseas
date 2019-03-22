@@ -4,8 +4,12 @@
 #include <math.h>
 #include "ass2types.h"
 
+#define Pi 3.1415926535
+
 #define true 1
 #define false 0
+
+#define COLOR_STEP 0.1
 
 #define MAX_RULES 20
 
@@ -120,6 +124,14 @@ void output_rules(RuleMap* rules) {
   }
 }
 
+void print_graphic(double x, double y, double end_x, double end_y, double r, double g, double b) {
+  long long _x = floor(x);
+  long long _y = floor(y);
+  long long _end_x = floor(end_x);
+  long long _end_y = floor(end_y);
+  printf("%lld %lld %lld %lld %.6f %.6f %.6f\n", _x, _y, _end_x, _end_y, r, g, b);
+}
+
 void free_strs(StrLinkList* head) {
   StrLinkList* t = head;
   while (t->next != NULL) {
@@ -130,6 +142,70 @@ void free_strs(StrLinkList* head) {
   free(t);
 }
 
+void handle_command(char cmd, double* x, double* y, double* next_x, double* next_y,double line, double* direction, double* r, double* g, double* b, double angle) {
+  switch(cmd) {
+    case 'F':
+      *next_x = *x + line * sin(*direction);
+      *next_y = *y + line * cos(*direction);
+      print_graphic(*x, *y, *next_x, *next_y, *r, *g, *b);
+      *x = *next_x;
+      *y = *next_y;
+      break;
+    case 'f':
+      *next_x = *x + sin(*direction);
+      *next_y = *y + cos(*direction);
+      *x = *next_x;
+      *y = *next_y;
+      break;
+    case '+':
+      *direction = *direction + angle;
+      break;
+    case '-':
+      *direction = *direction - angle;
+      break;
+    case 'R':
+      *r = *r + COLOR_STEP;
+      if (*r > 1.0) *r = 1.0;
+      break;
+    case 'r':
+      *r = *r - COLOR_STEP;
+      if (*r < 0.0) *r = 0.0;
+      break;
+    case 'G':
+      *g = *g + COLOR_STEP;
+      if (*g > 1.0) *g = 1.0;
+      break;
+    case 'g':
+      *g = *g - COLOR_STEP;
+      if (*g < 0.0) *g = 0.0;
+      break;
+    case 'B':
+      *b = *b + COLOR_STEP;
+      if (*b > 1.0) *b = 1.0;
+      break;
+    case 'b':
+      *b = *b - COLOR_STEP;
+      if (*b < 0.0) *b = 0.0;
+      break;
+    default:
+      break;
+  }
+}
 
+// do the drawing
+void draw_commands(StrLinkList* node, double line, double init_direction, double angle, double init_r, double init_g, double init_b) {
+  double x = 0.0, y = 0.0;
+  double next_x = 0.0, next_y = 0.0;
+  double direction = init_direction;
+  double r = init_r, g = init_g, b = init_b;
+  StrLinkList* t = node;
+  
+  while (t->next != NULL) {
+    handle_command(t->ch, &x, &y, &next_x, &next_y, line, &direction, &r, &g, &b, angle);
+    t = t->next;
+  }
+  handle_command(t->ch, &x, &y, &next_x, &next_y, line, &direction, &r, &g, &b, angle);
+
+}
 
 
