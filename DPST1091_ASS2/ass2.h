@@ -2,9 +2,30 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
-#include "ass2types.h"
+#define MAX_SIZE 1024
 
-#define Pi 3.1415926535
+// linked list struct for new string
+typedef struct str_node {
+  char ch;
+  struct str_node* next;
+} StrLinkList;
+
+// struct for rules
+typedef struct rule_map {
+  char ch;
+  char* rule;
+} RuleMap;
+
+typedef struct position {
+  double x;
+  double y;
+} PointPos;
+
+typedef struct position_node {
+  PointPos* points;
+  int top;
+} PosStack;
+
 
 #define true 1
 #define false 0
@@ -12,6 +33,9 @@
 #define COLOR_STEP 0.1
 
 #define MAX_RULES 20
+
+// function defines
+void iter_node(StrLinkList* node, RuleMap* rule_maps);
 
 // exit the program while error input happens
 void error_input() {
@@ -81,9 +105,9 @@ void read_start_str(StrLinkList* node) {
 }
 
 // output start string
-void output_start_str(StrLinkList* node) {
+void output_start_str(StrLinkList* node, int prev) {
   StrLinkList* t = node;
-  printf("Start String: ");
+  if (prev == 1) printf("Start String: ");
   while(t->next != NULL) {
     printf("%c", t->ch);
     t = t->next;
@@ -125,10 +149,10 @@ void output_rules(RuleMap* rules) {
 }
 
 void print_graphic(double x, double y, double end_x, double end_y, double r, double g, double b) {
-  long long _x = floor(x);
-  long long _y = floor(y);
-  long long _end_x = floor(end_x);
-  long long _end_y = floor(end_y);
+  long long _x = x >= 0.0 ? floor(x) : ceil(x);
+  long long _y = y >= 0.0 ? floor(y) : ceil(y);
+  long long _end_x = end_x >= 0.0 ? floor(end_x) : ceil(end_x);
+  long long _end_y = end_y >= 0.0 ? floor(end_y) : ceil(end_y);
   printf("%lld %lld %lld %lld %.6f %.6f %.6f\n", _x, _y, _end_x, _end_y, r, g, b);
 }
 
@@ -142,7 +166,7 @@ void free_strs(StrLinkList* head) {
   free(t);
 }
 
-void handle_command(char cmd, double* x, double* y, double* next_x, double* next_y,double line, double* direction, double* r, double* g, double* b, double angle) {
+void handle_command(char cmd, double* x, double* y, double* next_x, double* next_y,double line, double* direction, double* r, double* g, double* b, double angle, PosStack* point_stack) {
   switch(cmd) {
     case 'F':
       *next_x = *x + line * sin(*direction);
@@ -187,6 +211,16 @@ void handle_command(char cmd, double* x, double* y, double* next_x, double* next
       *b = *b - COLOR_STEP;
       if (*b < 0.0) *b = 0.0;
       break;
+    case '[':
+      point_stack->top++;
+      point_stack->points[point_stack->top].x = *x;
+      point_stack->points[point_stack->top].y = *y;
+      break;
+    case ']':
+      *x = point_stack->points[point_stack->top].x;
+      *y = point_stack->points[point_stack->top].y;
+      point_stack->top--;
+      break;
     default:
       break;
   }
@@ -199,13 +233,63 @@ void draw_commands(StrLinkList* node, double line, double init_direction, double
   double direction = init_direction;
   double r = init_r, g = init_g, b = init_b;
   StrLinkList* t = node;
-  
+  PosStack* point_stack = (PosStack*)malloc(sizeof(PosStack));
+  point_stack->points = (PointPos*)malloc(sizeof(PointPos) * MAX_SIZE);
+  point_stack->top = 0;
+
+  point_stack->points[0].x = 0.0;
+  point_stack->points[0].y = 0.0;
+
   while (t->next != NULL) {
-    handle_command(t->ch, &x, &y, &next_x, &next_y, line, &direction, &r, &g, &b, angle);
+    handle_command(t->ch, &x, &y, &next_x, &next_y, line, &direction, &r, &g, &b, angle, point_stack);
     t = t->next;
   }
-  handle_command(t->ch, &x, &y, &next_x, &next_y, line, &direction, &r, &g, &b, angle);
+  handle_command(t->ch, &x, &y, &next_x, &next_y, line, &direction, &r, &g, &b, angle, point_stack);
+
+  free(point_stack);
+}
+
+void output_iter_times(int times) {
+  printf("After %d iterations:\n", times);
+}
+
+void iter_node(StrLinkList* node, RuleMap* rules) {
+  StrLinkList* tail = node->next;
+  StrLinkList* temp = node;
+  RuleMap* t = rules;
+
+  int i;
+  for (i = 0; i < MAX_RULES; i++) {
+    if (t->ch == '\0' || t->ch == '\n') {
+      break;
+    } else {
+      if (t->ch == temp->ch) {
+        char* rule_str = t->rule;
+        temp->ch = rule_str[0];
+        rule_str++;
+        while(*rule_str) {
+          StrLinkList* ch_node = (StrLinkList*)malloc(sizeof(StrLinkList));
+          ch_node->ch = *rule_str;
+          temp->next = ch_node;
+          temp = ch_node;
+          rule_str++;
+        }
+        temp->next = tail;
+        break;
+      }
+    }
+    t++;
+  }
 
 }
 
+void iter_str(StrLinkList* head, RuleMap* rules) {
+  StrLinkList* t = head;
+  while (t->next) {
+    StrLinkList* next_node = t->next;
+    iter_node(t, rules);
+    t = next_node;
+  }
+  iter_node(t, rules);
+}
 

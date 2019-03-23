@@ -1,3 +1,5 @@
+#define MAX_SIZE 1024
+
 // linked list struct for new string
 typedef struct str_node {
   char ch;
@@ -9,6 +11,20 @@ typedef struct rule_map {
   char ch;
   char* rule;
 } RuleMap;
+
+typedef struct position {
+  double x;
+  double y;
+} PointPos;
+
+typedef struct position_node {
+  PointPos* points;
+  int top;
+} PosStack;
+
+
+
+
 
 
 
