@@ -109,12 +109,12 @@ void transformCommands(StrNode* head, BasicConfig config) {
   Brackets* brackets = (Brackets*)malloc(sizeof(Brackets));
   brackets->pos = 0;
 
-
   while (iterNode != NULL) {
     executeCommand(iterNode->letter, status, brackets);
     iterNode = iterNode->next;
   }
   free(status);
+  free(brackets);
 }
 
 void executeCommand(char cmd, BrushStatus* status, Brackets* brackets) {
@@ -275,7 +275,7 @@ int main(int argc, char* argv[]) {
 
   Rule rules[RULES_NUM];
   unsigned int rulesAmount = 0;
-  char ruleKey[1] = "";
+  char ruleKey[100] = "";
   char rulesStr[RULE_LENGTH] = "";
   for (i = 0; i < RULES_NUM; i++) {
     scanf("%s", ruleKey);
@@ -319,6 +319,12 @@ int main(int argc, char* argv[]) {
       iterTimes--;
     }
     printLinkedListPure(str);
+  }
+
+  while (str != NULL) {
+    StrNode* temp = str->next;
+    free(str);
+    str = temp;
   }
 
   return 0;
